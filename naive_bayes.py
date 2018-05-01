@@ -8,10 +8,6 @@ from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
 
 target_file = 'reviews.csv'
 
-test_data = []
-train_data = []
-
-
 def convert_file():
     if os.path.isfile(target_file):
         return
@@ -31,6 +27,9 @@ def divide_by_rankings():
 
     contents['rating'] = contents['rating'].astype(int)
 
+    global train_data
+    global test_data
+
     train_data, test_data = train_test_split(contents, test_size=0.2)
 
     negative_rankings = train_data[train_data['rating'] < 3]
@@ -46,19 +45,14 @@ def tokenize(docs, file_name):
 
     tokens = docs['text'].values
     tokens = ' '.join(tokens).split()
-    #     tokens = set(tokens)
     tokens = [str(x.lower()) for x in tokens if x not in ENGLISH_STOP_WORDS]
 
     with open(file_name, 'w') as the_file:
         the_file.write('\n'.join(tokens))
 
 
-def main():
-    convert_file()
+convert_file()
 
-
-if __name__ == "__main__":
-    main()
 
 # Breaking by Rankings
 negative_docs, neutral_docs, positive_docs = divide_by_rankings()
@@ -120,3 +114,5 @@ print classify(sentence1)
 print classify(sentence2)
 print classify(sentence3)
 print classify(sentence4)
+
+
